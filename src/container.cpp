@@ -11,9 +11,9 @@ GContainer::BClass * GContainer::Container::getElement(std::string name){
   }
   return NULL;
 }
-bool GContainer::Container::addElement(std::string name,
-			 std::string type,
-			 std::string value){
+bool GContainer::Container::addElement(const std::string name,
+				       const std::string type,
+				       const std::string value){
   std::string type_value;
   if(type == "string"     ||
      type == "str"        ||
@@ -91,6 +91,7 @@ bool GContainer::Container::addElement(std::string name,
     if( new_int > a || new_int < b ){
       std::cout << "new_date.month = " << new_int
 		<< " And is out of range. " << std::endl;
+      return false;
     }
     else{
       temp_date.month = new_int;    
@@ -157,14 +158,14 @@ bool GContainer::Container::addElement(std::string name,
     std::string type = "date";
     data<Date::date> *newData = new data<Date::date>(type,temp_date);
     _map[name] = (BClass *)newData;
-
+    
   }
-
+  
   return true;
 }
 
 bool GContainer::Container::getElement(const std::string name,
-			 float &val){
+				       float &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   std::cout << "here" << std::endl;
   if(Itr != _map.end()){
@@ -174,7 +175,7 @@ bool GContainer::Container::getElement(const std::string name,
   return false;
 }
 bool GContainer::Container::getElement(const std::string name,
-			 int &val){
+				       int &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
     val = ((data<int> *)Itr->second)->getVal();
@@ -192,7 +193,7 @@ bool GContainer::Container::getElement(const std::string name,
   return false;
 }
 bool GContainer::Container::getElement(const std::string name,
-			 std::string &val){
+				       std::string &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
     val = ((data<std::string> *)Itr->second)->getVal();
@@ -201,11 +202,11 @@ bool GContainer::Container::getElement(const std::string name,
   return false;
 }
 bool GContainer::Container::getElement(const std::string name,
-			 bool &val){
+				       bool &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
     val = ((data<bool> *)Itr->second)->getVal();
     return true;
   }
-  return false;  
+  return false;
 }
