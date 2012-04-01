@@ -38,10 +38,17 @@ class Container{
 public:
   Container(){};
   ~Container(){};
+  
+  bool deleteElement(const std::string name);
+  
+  template <typename T>
+  bool popElement(const std::string name, T &val);
+
   bool addElement(const std::string name,
 		  const std::string type,
 		  const std::string value);
   BClass * getElement(const std::string name);
+  // TODO: these can probably be template-ized
   bool getElement(const std::string name,
 		  float &val);
   bool getElement(const std::string name,

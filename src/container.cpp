@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <sstream>
-
+//#include <typeinfo>
 #include "container.h"
 
 GContainer::BClass * GContainer::Container::getElement(std::string name){
@@ -207,6 +207,24 @@ bool GContainer::Container::getElement(const std::string name,
   if(Itr != _map.end()){
     val = ((data<bool> *)Itr->second)->getVal();
     return true;
+  }
+  return false;
+}
+bool GContainer::Container::deleteElement(const std::string name){
+  std::map<std::string, BClass *>::iterator Itr = _map.find(name);
+  if(Itr != _map.end()){
+    _map.erase(Itr);
+    return true;
+  }
+  return false;
+}
+
+template <typename T>
+bool GContainer::Container::popElement(const std::string name, T &val){
+  if(getElement(name, val)){
+    if(deleteElement(name)){
+      return true;
+    }
   }
   return false;
 }
