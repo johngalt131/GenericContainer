@@ -9,6 +9,8 @@
 
 namespace GContainer{
 
+  typedef std::map<std::string,std::string> NAME_2_TYPE;
+
 class BClass{
 public:
   BClass(){};
