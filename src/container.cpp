@@ -6,9 +6,11 @@
 
 GContainer::Container::~Container(){
   DeleteAll();
+  delete _containerIterator;
+  _containerIterator = NULL;
 }
 GContainer::Container::Container(){
-  //  iterator = new ContainerIterator(&_map);
+  _containerIterator = NULL;
 }
 GContainer::Container::Container(const std::string name,
 				 const std::string type,
@@ -25,8 +27,16 @@ GContainer::BClass * GContainer::Container::GetElement(std::string name){
 GContainer::ContainerIterator::ContainerIterator(std::map<std::string,BClass *> *map){
   _map = map;
 }
+GContainer::ContainerIterator::~ContainerIterator(){
+  _map = NULL;
+}
 GContainer::ContainerIterator * GContainer::Container::GetIterator(){
-  return new ContainerIterator(&_map);
+  if(_containerIterator == NULL){
+
+  } else {
+    _containerIterator = new ContainerIterator(&_map);
+  }
+  return _containerIterator;
 }
 bool GContainer::ContainerIterator::Find(std::string name){
   iterator = _map->find(name);
@@ -56,6 +66,22 @@ bool GContainer::ContainerIterator::Previous(){
   iterator--;
   if(iterator != _map->end()){
     return true;
+  } else {
+    return false;
+  }
+}
+bool GContainer::BClass::Contains(BClass *test){
+ std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    std::string s1 = lhs->getVal();
+    std::string s2 = rhs->getVal();
+    
+    // TODO: add substring stuff
+    return false;
+    
   } else {
     return false;
   }
@@ -147,7 +173,7 @@ bool GContainer::BClass::operator>(BClass *test){
     data<bool> *rhs,*lhs;
     lhs = (data<bool> *)(this);
     rhs = (data<bool> *)(test);
-    return (lhs->getVal() > rhs->getVal());    
+    return (lhs->getVal() > rhs->getVal());
   }
 }
 bool GContainer::BClass::operator>=(BClass *test){
@@ -294,8 +320,9 @@ bool GContainer::Container::AddElement(const std::string name,
 	   type == "DATE" ){
     std::string new_date = value;
     Date::date temp_date;
+    memset(&temp_date,0,sizeof(temp_date));
     char *delete_me;
-    char *temp = strdup(new_date.c_str());
+    char *temp = (char *) new_date.c_str();
     struct tm *tmp;
     short diff;
     time_t utc_time, local_time;
@@ -306,13 +333,12 @@ bool GContainer::Container::AddElement(const std::string name,
     diff = (short) difftime(local_time,utc_time) / (60 * 60);
     delete_me = temp;
     char *date;
-    char *time;
+    char *time = NULL;
     int   new_int;
     int   a,b;
     date = strtok(temp,"T");
     time = strtok(NULL,"T");
     time = strtok(time,"Z");
-    
     date = strtok(date,"-,/");
     new_int = atoi(date);
     a = 12;
@@ -383,7 +409,7 @@ bool GContainer::Container::AddElement(const std::string name,
 	temp_date._time.seconds = new_int;
       }
     }
-    free(delete_me);
+    //    free(tmp);
     std::string type = "date";
     BClass *newData = new data<Date::date>(type,temp_date);
     _map[name] = newData;
@@ -460,32 +486,7 @@ bool GContainer::Container::PopElement(const std::string name, T &val){
 bool GContainer::Container::DeleteAll(){
   std::map<std::string, BClass *>::iterator Itr = _map.begin();
   for(; Itr != _map.end(); Itr++){
-    //    std::string type = Itr->second->getType();
-    //    std::cout << " Type = " << type << std::endl;
     delete Itr->second;
-    // if(type == "int"){
-    //   data<int> * d = (data<int> *)(Itr->second);
-    //   delete d;
-    // }
-    // else if(type == "float"){
-    //   data<float> * d = (data<float> *)(Itr->second);
-    //   delete d;
-    // }
-    // else if(type == "string"){
-    //   data<std::string> * d = (data<std::string> *)(Itr->second);
-    //   delete d;
-    // }
-    // else if(type == "bool"){
-    //   data<bool> * d = (data<bool> *)(Itr->second);
-    //   delete d;
-    // }
-    // else if(Itr->second->getType() == "date"){
-    //   data<Date::date> * d = (data<Date::date> *)(Itr->second);
-    //   delete d;
-    // }
-    // else{
-    //   std::cout << "Unkown Type" << std::endl;
-    // }
+    Itr->second = NULL;
   }
-  //  _map.clear();
 }

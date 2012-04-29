@@ -17,6 +17,7 @@ public:
   bool operator>=(BClass *test);
   bool operator==(BClass *test);
   bool operator!=(BClass *test);
+  bool Contains(BClass *test);
   virtual ~BClass(){};
   virtual std::string getType() = 0;
 private:
@@ -43,6 +44,7 @@ private:
 class ContainerIterator{
 public:
   ContainerIterator(std::map<std::string,BClass *> *map);
+  ~ContainerIterator();
   bool Begin();
   bool Next();
   bool Previous();
@@ -85,6 +87,7 @@ public:
 		  bool &val);
   
  private:
+  ContainerIterator *_containerIterator;
   std::map<std::string,BClass *> _map;
 };
 } // End namespace

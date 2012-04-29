@@ -53,4 +53,8 @@ int main(){
     std::cout << test_val << std::endl;
     list.push_back(Fred);
   }
+  LIST::iterator litr = list.begin();
+  for(; litr != list.end(); litr++){
+    delete *litr;
+  }
 }
