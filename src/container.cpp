@@ -4,14 +4,243 @@
 //#include <typeinfo>
 #include "container.h"
 
-GContainer::BClass * GContainer::Container::getElement(std::string name){
+GContainer::Container::~Container(){
+  DeleteAll();
+}
+GContainer::Container::Container(){
+  //  iterator = new ContainerIterator(&_map);
+}
+GContainer::Container::Container(const std::string name,
+				 const std::string type,
+				 const std::string value){
+  this->AddElement(name,type,value);
+}
+GContainer::BClass * GContainer::Container::GetElement(std::string name){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
     return Itr->second;
   }
   return NULL;
 }
-bool GContainer::Container::addElement(const std::string name,
+GContainer::ContainerIterator::ContainerIterator(std::map<std::string,BClass *> *map){
+  _map = map;
+}
+GContainer::ContainerIterator * GContainer::Container::GetIterator(){
+  return new ContainerIterator(&_map);
+}
+bool GContainer::ContainerIterator::Find(std::string name){
+  iterator = _map->find(name);
+  if(iterator != _map->end()){
+    return true;
+  } else {
+    return false;
+  }
+}
+bool GContainer::ContainerIterator::Begin(){
+  iterator = _map->begin();
+  if(iterator != _map->end()){
+    return true;
+  } else {
+    return false;
+  }
+}
+bool GContainer::ContainerIterator::Next(){
+  iterator++;
+  if(iterator != _map->end()){
+    return true;
+  } else {
+    return false;
+  }
+}
+bool GContainer::ContainerIterator::Previous(){
+  iterator--;
+  if(iterator != _map->end()){
+    return true;
+  } else {
+    return false;
+  }
+}
+bool GContainer::BClass::operator<(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() < rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() < rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() < rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() < rhs->getVal());    
+  }
+}
+bool GContainer::BClass::operator<=(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() <= rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() <= rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() <= rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() <= rhs->getVal());    
+  }
+}
+bool GContainer::BClass::operator>(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() > rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() > rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() > rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() > rhs->getVal());    
+  }
+}
+bool GContainer::BClass::operator>=(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() >= rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() >= rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() >= rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() >= rhs->getVal());    
+  }
+}
+bool GContainer::BClass::operator==(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() == rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() == rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() == rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() == rhs->getVal());    
+  }
+}
+bool GContainer::BClass::operator!=(BClass *test){
+  std::string type = this->getType();
+  if(type == "string"){
+    data<std::string> *rhs,*lhs;
+    lhs = (data<std::string> *)(this);
+    rhs = (data<std::string> *)(test);
+    return (lhs->getVal() != rhs->getVal());
+  } else if (type == "float"){
+    data<float> *rhs,*lhs;
+    lhs = (data<float> *)(this);
+    rhs = (data<float> *)(test);
+    return (lhs->getVal() != rhs->getVal());
+  } else if (type == "int"){
+    data<int> *rhs,*lhs;
+    lhs = (data<int> *)(this);
+    rhs = (data<int> *)(test);
+    return (lhs->getVal() != rhs->getVal());
+  } else if (type == "date"){
+    // data<date> *rhs,*lhs;
+    // lhs = (data<date> *)(this);
+    // rhs = (data<date> *)(test);
+    //    return (lhs->getVal() < rhs->getVal());
+    return (false);
+  } else if (type == "bool"){
+    data<bool> *rhs,*lhs;
+    lhs = (data<bool> *)(this);
+    rhs = (data<bool> *)(test);
+    return (lhs->getVal() != rhs->getVal());    
+  }
+}
+bool GContainer::Container::AddElement(const std::string name,
 				       const std::string type,
 				       const std::string value){
   std::string type_value;
@@ -21,8 +250,8 @@ bool GContainer::Container::addElement(const std::string name,
      type == "STRING"     ||
      type == "std::string" ){
     type_value = "string";
-    data<std::string> *newData = new data<std::string>(type_value,value);
-    _map[name] = (BClass *)newData;
+    BClass *newData = new data<std::string>(type_value,value);
+    _map[name] = newData;
   }
   else if(type == "int"     ||
 	  type == "INT"     ||
@@ -32,8 +261,8 @@ bool GContainer::Container::addElement(const std::string name,
     int int_val = 0;
     string_to_int << value;
     string_to_int >> int_val;
-    data<int> *newData = new data<int>(type_value,int_val);
-    _map[name] = (BClass *)newData;
+    BClass *newData = new data<int>(type_value,int_val);
+    _map[name] = newData;
   }
   else if(type == "float"     ||
 	  type == "FLOAT"     ||
@@ -43,8 +272,8 @@ bool GContainer::Container::addElement(const std::string name,
     float float_val = 0;
     string_to_float << value;
     string_to_float >> float_val;
-    data<float> *newData = new data<float>(type_value,float_val);
-    _map[name] = (BClass *)newData;
+    BClass *newData = new data<float>(type_value,float_val);
+    _map[name] = newData;
   }
   else if(type == "bool"     ||
 	  type == "boolean"     ||
@@ -57,8 +286,8 @@ bool GContainer::Container::addElement(const std::string name,
        value == "1"){
       bool_val = true;
     }
-    data<bool> *newData = new data<bool>(type_value,bool_val);
-    _map[name] = (BClass *)newData;
+    BClass *newData = new data<bool>(type_value,bool_val);
+    _map[name] = newData;
   }
   else if (type == "Date" ||
 	   type == "date" ||
@@ -154,36 +383,35 @@ bool GContainer::Container::addElement(const std::string name,
 	temp_date._time.seconds = new_int;
       }
     }
-    free(temp);
+    free(delete_me);
     std::string type = "date";
-    data<Date::date> *newData = new data<Date::date>(type,temp_date);
-    _map[name] = (BClass *)newData;
+    BClass *newData = new data<Date::date>(type,temp_date);
+    _map[name] = newData;
     
   }
   
   return true;
 }
 
-bool GContainer::Container::getElement(const std::string name,
+bool GContainer::Container::GetElement(const std::string name,
 				       float &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
-  std::cout << "here" << std::endl;
   if(Itr != _map.end()){
     val = ((data<float> *)Itr->second)->getVal();
     return true;
   }
   return false;
 }
-bool GContainer::Container::getElement(const std::string name,
+bool GContainer::Container::GetElement(const std::string name,
 				       int &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
-    val = ((data<int> *)Itr->second)->getVal();
+    val = (dynamic_cast<data<int> *> (Itr->second))->getVal();
     return true;
   }
   return false;
 }
-bool GContainer::Container::getElement(const std::string name,
+bool GContainer::Container::GetElement(const std::string name,
 				       Date::date &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
@@ -192,7 +420,7 @@ bool GContainer::Container::getElement(const std::string name,
   }
   return false;
 }
-bool GContainer::Container::getElement(const std::string name,
+bool GContainer::Container::GetElement(const std::string name,
 				       std::string &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
@@ -201,7 +429,7 @@ bool GContainer::Container::getElement(const std::string name,
   }
   return false;
 }
-bool GContainer::Container::getElement(const std::string name,
+bool GContainer::Container::GetElement(const std::string name,
 				       bool &val){
   std::map<std::string, BClass *>::const_iterator Itr = _map.find(name);
   if(Itr != _map.end()){
@@ -210,21 +438,54 @@ bool GContainer::Container::getElement(const std::string name,
   }
   return false;
 }
-bool GContainer::Container::deleteElement(const std::string name){
+bool GContainer::Container::DeleteElement(const std::string name){
   std::map<std::string, BClass *>::iterator Itr = _map.find(name);
   if(Itr != _map.end()){
     _map.erase(Itr);
+    delete Itr->second;
     return true;
   }
   return false;
 }
 
 template <typename T>
-bool GContainer::Container::popElement(const std::string name, T &val){
-  if(getElement(name, val)){
-    if(deleteElement(name)){
+bool GContainer::Container::PopElement(const std::string name, T &val){
+  if(GetElement(name, val)){
+    if(DeleteElement(name)){
       return true;
     }
   }
   return false;
+}
+bool GContainer::Container::DeleteAll(){
+  std::map<std::string, BClass *>::iterator Itr = _map.begin();
+  for(; Itr != _map.end(); Itr++){
+    //    std::string type = Itr->second->getType();
+    //    std::cout << " Type = " << type << std::endl;
+    delete Itr->second;
+    // if(type == "int"){
+    //   data<int> * d = (data<int> *)(Itr->second);
+    //   delete d;
+    // }
+    // else if(type == "float"){
+    //   data<float> * d = (data<float> *)(Itr->second);
+    //   delete d;
+    // }
+    // else if(type == "string"){
+    //   data<std::string> * d = (data<std::string> *)(Itr->second);
+    //   delete d;
+    // }
+    // else if(type == "bool"){
+    //   data<bool> * d = (data<bool> *)(Itr->second);
+    //   delete d;
+    // }
+    // else if(Itr->second->getType() == "date"){
+    //   data<Date::date> * d = (data<Date::date> *)(Itr->second);
+    //   delete d;
+    // }
+    // else{
+    //   std::cout << "Unkown Type" << std::endl;
+    // }
+  }
+  //  _map.clear();
 }

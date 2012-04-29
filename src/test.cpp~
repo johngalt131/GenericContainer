@@ -1,0 +1,14 @@
+#include <iostream>
+#include <std::string>
+
+#include "containers.h"
+
+int main(){
+  static const int NUM = 100;
+  GContainer::Container *Fred = new GContainer::Container();
+  for(int j = 0; j< NUM; j++){
+    
+  }
+  delete Fred;
+  Fred = NULL;
+}

@@ -1,7 +1,6 @@
 
 #ifndef CONTAINER_H
 #define CONTAINER_H
-
 #include <string>
 #include <map>
 
@@ -9,21 +8,25 @@
 
 namespace GContainer{
 
-  typedef std::map<std::string,std::string> NAME_2_TYPE;
-
 class BClass{
 public:
   BClass(){};
+  bool operator<(BClass *test);
+  bool operator<=(BClass *test);
+  bool operator>(BClass *test);
+  bool operator>=(BClass *test);
+  bool operator==(BClass *test);
+  bool operator!=(BClass *test);
   virtual ~BClass(){};
   virtual std::string getType() = 0;
 private:
 };
 
-template <typename T>
+template <class T>
 class data : public BClass
 {
 public:
-  virtual ~data(){};
+  ~data(){};
   data(std::string type,T t){
     _value = t;
     _type = type;
@@ -36,30 +39,49 @@ private:
   T _value;
 };
 
+  
+class ContainerIterator{
+public:
+  ContainerIterator(std::map<std::string,BClass *> *map);
+  bool Begin();
+  bool Next();
+  bool Previous();
+  bool Find(std::string name);
+  std::map<std::string,BClass *>::const_iterator iterator;
+private:
+  std::map<std::string,BClass *> *_map;
+};
+
 class Container{
 public:
-  Container(){};
-  ~Container(){};
+  Container(const std::string name,
+	    const std::string type,
+	    const std::string value);
+  Container();
+  ~Container();
   
-  bool deleteElement(const std::string name);
-  
+  bool DeleteElement(const std::string name);
+  bool DeleteAll();
   template <typename T>
-  bool popElement(const std::string name, T &val);
+  bool PopElement(const std::string name, T &val);
 
-  bool addElement(const std::string name,
+  bool AddElement(const std::string name,
 		  const std::string type,
 		  const std::string value);
-  BClass * getElement(const std::string name);
+  BClass * GetElement(const std::string name);
+ 
+  ContainerIterator * GetIterator();
+  
   // TODO: these can probably be template-ized
-  bool getElement(const std::string name,
+  bool GetElement(const std::string name,
 		  float &val);
-  bool getElement(const std::string name,
+  bool GetElement(const std::string name,
 		  int &val);
-  bool getElement(const std::string name,
+  bool GetElement(const std::string name,
 		  Date::date &val);
-  bool getElement(const std::string name,
+  bool GetElement(const std::string name,
 		  std::string &val);
-  bool getElement(const std::string name,
+  bool GetElement(const std::string name,
 		  bool &val);
   
  private:
